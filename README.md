@@ -13,6 +13,7 @@ So, "One Cut Checker" makes it possible to enter with 1 key.
 
 # How to use
 Please double click on the package that can be downloaded from the link below and import it to Unity.
+
 https://github.com/yukiringo/OneCutChecker/raw/master/one_cut_checker.unitypackage
 
 Window -> One Cut Checker
