@@ -35,7 +35,10 @@ public class OneCutChecker : EditorWindow
     {
         if (!useShortcutKey || !EditorApplication.isPlaying)
         {
-            focusedWindow.SendEvent(Event.KeyboardEvent("p"));
+            if (focusedWindow != null)
+            {
+                focusedWindow.SendEvent(Event.KeyboardEvent("p"));
+            }
 
             return;
         }
@@ -48,9 +51,12 @@ public class OneCutChecker : EditorWindow
     {
         if (!useShortcutKey || !EditorApplication.isPlaying)
         {
-            focusedWindow.SendEvent(Event.KeyboardEvent("LEFT"));
+            if (focusedWindow != null)
+            {
+                focusedWindow.SendEvent(Event.KeyboardEvent("LEFT"));
+            }
 
-            return ;
+            return;
         }
 
         if (screenController != null && screenController.FramePosition > 0)
@@ -65,7 +71,10 @@ public class OneCutChecker : EditorWindow
     {
         if (!useShortcutKey || !EditorApplication.isPlaying)
         {
-            focusedWindow.SendEvent(Event.KeyboardEvent("RIGHT"));
+            if (focusedWindow != null)
+            {
+                focusedWindow.SendEvent(Event.KeyboardEvent("RIGHT"));
+            }
 
             return;
         }
