@@ -21,6 +21,13 @@ public class OneCutChecker : EditorWindow
             oneCutChecker.titleContent = new GUIContent("One Cut Checker");
             oneCutChecker.Show();
         }
+
+        if (gameView == null)
+        {
+            var assembly = typeof(EditorWindow).Assembly;
+            var type = assembly.GetType("UnityEditor.GameView");
+            gameView = GetWindow(type);
+        }
     }
 
     [MenuItem("Edit/Pause _p")]
