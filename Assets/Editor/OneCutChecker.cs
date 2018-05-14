@@ -26,8 +26,10 @@ public class OneCutChecker : EditorWindow
     [MenuItem("Edit/Pause _p")]
     static void Pause()
     {
-        if (!useShortcutKey)
+        if (!useShortcutKey || !EditorApplication.isPlaying)
         {
+            focusedWindow.SendEvent(Event.KeyboardEvent("p"));
+
             return;
         }
 
@@ -37,20 +39,27 @@ public class OneCutChecker : EditorWindow
     [MenuItem("Edit/Previous frame _LEFT")]
     static void PrevFrame()
     {
-        if (!useShortcutKey || screenController == null || screenController.FramePosition <= 0)
+        if (!useShortcutKey || !EditorApplication.isPlaying)
         {
-            return;
+            focusedWindow.SendEvent(Event.KeyboardEvent("LEFT"));
+
+            return ;
         }
 
-        screenController.FramePosition--;
-        gameView.Repaint();
+        if (screenController != null && screenController.FramePosition > 0)
+        {
+            screenController.FramePosition--;
+            gameView.Repaint();
+        }
     }
 
     [MenuItem("Edit/Next frame _RIGHT")]
     static void NextFrame()
     {
-        if (!useShortcutKey)
+        if (!useShortcutKey || !EditorApplication.isPlaying)
         {
+            focusedWindow.SendEvent(Event.KeyboardEvent("RIGHT"));
+
             return;
         }
 
