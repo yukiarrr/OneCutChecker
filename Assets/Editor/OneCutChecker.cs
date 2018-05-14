@@ -21,13 +21,6 @@ public class OneCutChecker : EditorWindow
             oneCutChecker.titleContent = new GUIContent("One Cut Checker");
             oneCutChecker.Show();
         }
-
-        if (gameView == null)
-        {
-            var assembly = typeof(EditorWindow).Assembly;
-            var type = assembly.GetType("UnityEditor.GameView");
-            gameView = GetWindow(type);
-        }
     }
 
     [MenuItem("Edit/Pause _p")]
@@ -90,7 +83,7 @@ public class OneCutChecker : EditorWindow
         }
     }
 
-    void OnEnable()
+    void OnGUI()
     {
         if (gameView == null)
         {
@@ -98,10 +91,7 @@ public class OneCutChecker : EditorWindow
             var type = assembly.GetType("UnityEditor.GameView");
             gameView = GetWindow(type);
         }
-    }
 
-    void OnGUI()
-    {
         DoToolbar();
 
         EditorGUILayout.LabelField("Shortcut key");
