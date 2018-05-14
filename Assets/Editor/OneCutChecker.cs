@@ -174,8 +174,6 @@ public class OneCutChecker : EditorWindow
                     screenController.FramePosition++;
                 }
 
-                Repaint();
-
                 Thread.Sleep(Mathf.RoundToInt(1.0f / speed * 1000.0f));
             }
         });
