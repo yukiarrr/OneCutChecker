@@ -1,11 +1,14 @@
 ﻿using System.Threading;
+#if NET_4_6
+using System.Threading.Tasks;
+#endif
 using UnityEditor;
 using UnityEngine;
 
 public class OneCutChecker : EditorWindow
 {
     bool isPlayingLoop;
-    int speed = 60;
+    int speed;
 
     static OneCutChecker oneCutChecker;
     static ScreenController screenController;
@@ -85,6 +88,11 @@ public class OneCutChecker : EditorWindow
 
     void OnGUI()
     {
+        if (speed == 0)
+        {
+            speed = Application.targetFrameRate == -1 ? 60 : Application.targetFrameRate;
+        }
+
         if (gameView == null)
         {
             var assembly = typeof(EditorWindow).Assembly;
@@ -120,12 +128,16 @@ public class OneCutChecker : EditorWindow
 
             EditorGUILayout.Space();
 
-            if (isPlayingLoop)
-            {
-                speed = EditorGUILayout.IntSlider("Speed (FPS)", speed, 1, 150);
-                gameView.Repaint();
+            speed = EditorGUILayout.IntSlider("Speed (FPS)", speed, 1, 150);
+            gameView.Repaint();
 
-                EditorGUILayout.Space();
+            EditorGUILayout.Space();
+
+            if (GUILayout.Button("Play"))
+            {
+                isPlayingLoop = false;
+
+                PlayAsync();
             }
 
             if (GUILayout.Button(isPlayingLoop ? "Pause loop" : "Play loop"))
@@ -134,7 +146,7 @@ public class OneCutChecker : EditorWindow
 
                 if (isPlayingLoop)
                 {
-                    PlayLoop();
+                    PlayLoopAsync();
                 }
             }
         }
@@ -172,26 +184,71 @@ public class OneCutChecker : EditorWindow
         GUILayout.EndHorizontal();
     }
 
-    void PlayLoop()
+    void PlayAsync()
     {
-        speed = Application.targetFrameRate == -1 ? 60 : Application.targetFrameRate;
+        screenController.FramePosition = 0;
 
+#if NET_4_6
+        Task.Run(() =>
+        {
+            Play();
+        });
+#else
         var thread = new Thread(() =>
         {
-            while (isPlayingLoop)
-            {
-                if (screenController.FramePosition == screenController.Texture2Ds.Count - 1)
-                {
-                    screenController.FramePosition = 0;
-                }
-                else
-                {
-                    screenController.FramePosition++;
-                }
-
-                Thread.Sleep(Mathf.RoundToInt(1.0f / speed * 1000.0f));
-            }
+            Play();
         });
         thread.Start();
+#endif
+    }
+
+    void Play()
+    {
+        while (!isPlayingLoop)
+        {
+            if (screenController.FramePosition == screenController.Texture2Ds.Count - 1)
+            {
+                return;
+            }
+            else
+            {
+                screenController.FramePosition++;
+            }
+
+            Thread.Sleep(Mathf.RoundToInt(1.0f / speed * 1000.0f));
+        }
+    }
+
+    void PlayLoopAsync()
+    {
+#if NET_4_6
+        Task.Run(() =>
+        {
+            PlayLoop();
+        });
+#else
+        var thread = new Thread(() =>
+        {
+            PlayLoop();
+        });
+        thread.Start();
+#endif
+    }
+
+    void PlayLoop()
+    {
+        while (isPlayingLoop)
+        {
+            if (screenController.FramePosition == screenController.Texture2Ds.Count - 1)
+            {
+                screenController.FramePosition = 0;
+            }
+            else
+            {
+                screenController.FramePosition++;
+            }
+
+            Thread.Sleep(Mathf.RoundToInt(1.0f / speed * 1000.0f));
+        }
     }
 }
