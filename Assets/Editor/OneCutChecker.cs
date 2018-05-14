@@ -29,7 +29,7 @@ public class OneCutChecker : EditorWindow
     [MenuItem("Edit/Pause _p")]
     static void Pause()
     {
-        if (!useShortcutKey || !EditorApplication.isPlaying)
+        if (!useShortcutKey || !EditorApplication.isPlaying || oneCutChecker == null)
         {
             if (focusedWindow != null)
             {
@@ -45,7 +45,7 @@ public class OneCutChecker : EditorWindow
     [MenuItem("Edit/Previous frame _LEFT")]
     static void PrevFrame()
     {
-        if (!useShortcutKey || !EditorApplication.isPlaying)
+        if (!useShortcutKey || !EditorApplication.isPlaying || oneCutChecker == null)
         {
             if (focusedWindow != null)
             {
@@ -65,7 +65,7 @@ public class OneCutChecker : EditorWindow
     [MenuItem("Edit/Next frame _RIGHT")]
     static void NextFrame()
     {
-        if (!useShortcutKey || !EditorApplication.isPlaying)
+        if (!useShortcutKey || !EditorApplication.isPlaying || oneCutChecker == null)
         {
             if (focusedWindow != null)
             {
@@ -88,6 +88,13 @@ public class OneCutChecker : EditorWindow
 
     void OnGUI()
     {
+        if (oneCutChecker == null)
+        {
+            oneCutChecker = GetWindow<OneCutChecker>();
+            oneCutChecker.titleContent = new GUIContent("One Cut Checker");
+            oneCutChecker.Show();
+        }
+
         if (speed == 0)
         {
             speed = Application.targetFrameRate == -1 ? 60 : Application.targetFrameRate;
